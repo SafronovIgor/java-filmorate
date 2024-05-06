@@ -64,8 +64,8 @@ public class FilmController {
             }
         }
 
-        if (film.getDuration() < 0 ) {
-            throw  new ValidationException();
+        if (film.getDuration() < 0) {
+            throw new ValidationException();
         }
     }
 }
