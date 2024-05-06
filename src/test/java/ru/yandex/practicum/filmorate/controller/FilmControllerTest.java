@@ -24,7 +24,7 @@ class FilmControllerTest {
         Film filmLongDescription = new Film();
         filmLongDescription.setDescription("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS" +
                 "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS" +
-                "SSSSSSSSSSSSSSSSSSSS");
+                "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
         assertThrows(ValidationException.class, () -> FilmController.validationFilm(filmLongDescription));
 
         // Тестирование случая, когда ReleaseDate дата раньше 1895-12-28
