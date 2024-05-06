@@ -27,7 +27,7 @@ public class FilmController {
             films.put(film.getId(), film);
             return new ResponseEntity<>(film, HttpStatus.CREATED);
         } catch (ValidationException e) {
-            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -56,7 +56,7 @@ public class FilmController {
 
         if (film.getReleaseDate() != null) {
             if (film.getReleaseDate().isBefore(LocalDate.parse("1895-12-28"))) {
-                throw new RuntimeException();
+                throw new ValidationException();
             }
         }
 
