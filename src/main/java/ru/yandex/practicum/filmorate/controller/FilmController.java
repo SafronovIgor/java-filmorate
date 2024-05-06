@@ -33,6 +33,10 @@ public class FilmController {
 
     @PutMapping(value = "films", consumes = "application/json", produces = "application/json")
     public ResponseEntity<Film> updateFilm(@RequestBody Film film) {
+        if (!films.containsKey(film.getId())) {
+            return new ResponseEntity<>(film, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
         films.put(film.getId(), film);
         return new ResponseEntity<>(film, HttpStatus.OK);
     }
@@ -60,10 +64,8 @@ public class FilmController {
             }
         }
 
-        if (film.getDuration() != null) {
-            if (film.getDuration().isNegative()) {
-                throw new ValidationException();
-            }
+        if (film.getDuration() < 0 ) {
+            throw  new ValidationException();
         }
     }
 }

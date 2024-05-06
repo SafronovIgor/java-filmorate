@@ -33,6 +33,10 @@ public class UserController {
 
     @PutMapping(value = "users", consumes = "application/json", produces = "application/json")
     public ResponseEntity<User> updateUser(@RequestBody User user) {
+        if (!users.containsKey(user.getId())) {
+            return new ResponseEntity<>(user, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
         users.put(user.getId(), user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
@@ -54,10 +58,8 @@ public class UserController {
             }
         }
 
-        if (user.getName() != null && user.getLogin() != null) {
-            if (user.getName().isEmpty()) {
-                user.setName(user.getLogin());
-            }
+        if (user.getName() == null && user.getLogin() != null) {
+            user.setName(user.getLogin());
         }
 
         if (user.getBirthday() != null) {
