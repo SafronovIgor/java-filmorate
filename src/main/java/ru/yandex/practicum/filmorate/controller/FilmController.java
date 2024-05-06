@@ -27,7 +27,7 @@ public class FilmController {
             films.put(film.getId(), film);
             return new ResponseEntity<>(film, HttpStatus.CREATED);
         } catch (ValidationException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(film, HttpStatus.BAD_REQUEST);
         }
     }
 

@@ -27,7 +27,7 @@ public class UserController {
             users.put(user.getId(), user);
             return new ResponseEntity<>(user, HttpStatus.CREATED);
         } catch (ValidationException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(user, HttpStatus.BAD_REQUEST);
         }
     }
 
