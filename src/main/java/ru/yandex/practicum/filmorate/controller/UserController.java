@@ -39,23 +39,31 @@ public class UserController {
 
     public static void validationUser(User user) throws ValidationException {
         if (user == null) {
-            throw new ValidationException("User object is null.");
+            throw new ValidationException();
         }
 
-        if (user.getLogin() != null && user.getName() != null && user.getName().isEmpty()) {
-            user.setName(user.getLogin());
+        if (user.getEmail() != null) {
+            if (user.getEmail().isEmpty() || !user.getEmail().contains("@")) {
+                throw new ValidationException();
+            }
         }
 
-        if (user.getEmail() == null || user.getEmail().isEmpty() || !user.getEmail().contains("@")) {
-            throw new ValidationException("No valid email.");
+        if (user.getLogin() != null) {
+            if (user.getLogin().isEmpty() || user.getLogin().contains(" ")) {
+                throw new ValidationException();
+            }
         }
 
-        if (user.getLogin() == null || user.getLogin().isEmpty() || user.getLogin().contains(" ")) {
-            throw new ValidationException("No valid login.");
+        if (user.getName() != null && user.getLogin() != null) {
+            if (user.getName().isEmpty()) {
+                user.setName(user.getLogin());
+            }
         }
 
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            throw new ValidationException("No valid birthday.");
+        if (user.getBirthday() != null) {
+            if (user.getBirthday().isAfter(LocalDate.now())) {
+                throw new ValidationException();
+            }
         }
     }
 }

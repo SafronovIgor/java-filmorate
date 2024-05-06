@@ -39,23 +39,31 @@ public class FilmController {
 
     public static void validationFilm(Film film) throws ValidationException {
         if (film == null) {
-            throw new ValidationException("Film object is null.");
+            throw new ValidationException();
         }
 
-        if (film.getName() == null || film.getName().isEmpty()) {
-            throw new ValidationException("No valid name.");
+        if (film.getName() != null) {
+            if (film.getName().isEmpty()) {
+                throw new ValidationException();
+            }
         }
 
-        if (film.getDescription().length() > 200) {
-            throw new ValidationException("No valid description.");
+        if (film.getDescription() != null) {
+            if (film.getDescription().length() > 200) {
+                throw new ValidationException();
+            }
         }
 
-        if (film.getReleaseDate().isBefore(LocalDate.parse("1895-12-28"))) {
-            throw new ValidationException("No valid releaseDate.");
+        if (film.getReleaseDate() != null) {
+            if (film.getReleaseDate().isBefore(LocalDate.parse("1895-12-28"))) {
+                throw new RuntimeException();
+            }
         }
 
-        if (film.getDuration().isNegative()) {
-            throw new ValidationException("No valid duration.");
+        if (film.getDuration() != null) {
+            if (film.getDuration().isNegative()) {
+                throw new ValidationException();
+            }
         }
     }
 }

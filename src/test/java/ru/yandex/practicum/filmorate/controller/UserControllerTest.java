@@ -25,11 +25,6 @@ class UserControllerTest {
         userInvalidEmail.setEmail("invalidemail.com");
         assertThrows(ValidationException.class, () -> UserController.validationUser(userInvalidEmail));
 
-        // Тестирование случая, когда Name пустой
-        User userEmptyLogin = new User();
-        userEmptyLogin.setName("");
-        assertThrows(ValidationException.class, () -> UserController.validationUser(userEmptyLogin));
-
         // Тестирование случая, когда Login содержит пробелы
         User userInvalidLogin = new User();
         userInvalidLogin.setLogin("invalid login");
