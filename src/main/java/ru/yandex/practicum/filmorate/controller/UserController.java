@@ -22,6 +22,8 @@ public class UserController {
 
     @PostMapping(value = "users", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> createUser(@RequestBody User user) {
+        user.setId(getNextId());
+
         try {
             validationUser(user);
             users.put(user.getId(), user);
@@ -67,5 +69,13 @@ public class UserController {
                 throw new ValidationException();
             }
         }
+    }
+
+    private long getNextId() {
+        var currentMaxId = users.values().stream()
+                .mapToLong(User::getId)
+                .max()
+                .orElse(0L);
+        return ++currentMaxId;
     }
 }

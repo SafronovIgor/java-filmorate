@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
@@ -22,6 +21,8 @@ public class FilmController {
 
     @PostMapping(value = "films", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> createFilm(@RequestBody Film film) {
+        film.setId(getNextId());
+
         try {
             validationFilm(film);
             films.put(film.getId(), film);
@@ -67,5 +68,13 @@ public class FilmController {
         if (film.getDuration() < 0) {
             throw new ValidationException();
         }
+    }
+
+    private long getNextId() {
+        var currentMaxId = films.values().stream()
+                .mapToLong(Film::getId)
+                .max()
+                .orElse(0L);
+        return ++currentMaxId;
     }
 }
