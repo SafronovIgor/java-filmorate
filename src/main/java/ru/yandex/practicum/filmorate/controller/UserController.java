@@ -42,15 +42,15 @@ public class UserController {
             throw new ValidationException("User object is null.");
         }
 
-        if (user.getLogin() != null && user.getName().isEmpty()) {
+        if (user.getLogin() != null && user.getName() != null && user.getName().isEmpty()) {
             user.setName(user.getLogin());
         }
 
-        if (user.getEmail().isEmpty() || !user.getEmail().contains("@")) {
+        if (user.getEmail() == null || user.getEmail().isEmpty() || !user.getEmail().contains("@")) {
             throw new ValidationException("No valid email.");
         }
 
-        if (user.getLogin().isEmpty() || user.getLogin().contains(" ")) {
+        if (user.getLogin() == null || user.getLogin().isEmpty() || user.getLogin().contains(" ")) {
             throw new ValidationException("No valid login.");
         }
 
