@@ -27,13 +27,9 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public void setNewId(Film obj) {
+    public void save(Film obj) {
         long newId = ServiceUtil.generateNewId(filmsInMemory);
         obj.setId(newId);
-    }
-
-    @Override
-    public void addFilm(Film obj) {
         filmsInMemory.put(obj.getId(), obj);
     }
 

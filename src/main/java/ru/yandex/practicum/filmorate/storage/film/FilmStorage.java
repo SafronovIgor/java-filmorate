@@ -10,9 +10,7 @@ public interface FilmStorage {
 
     Collection<Film> getFilms();
 
-    void setNewId(Film obj);
-
-    void addFilm(Film obj);
+    void save(Film obj);
 
     void filmExists(long id);
 }

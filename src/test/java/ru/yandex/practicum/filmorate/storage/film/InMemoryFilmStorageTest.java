@@ -17,15 +17,14 @@ class InMemoryFilmStorageTest {
         filmStorage = new InMemoryFilmStorage();
         IntStream.range(0, 10).forEach(i -> {
             Film film = new Film();
-            filmStorage.setNewId(film);
-            filmStorage.addFilm(film);
+            filmStorage.save(film);
         });
     }
 
     @Test
     void getFilmById() {
         Film expectedFilm = new Film();
-        filmStorage.addFilm(expectedFilm);
+        filmStorage.save(expectedFilm);
         Film actualFilm = filmStorage.getFilmById(expectedFilm.getId());
         assertEquals(expectedFilm, actualFilm, "The retrieved film is not as expected.");
     }
@@ -38,14 +37,14 @@ class InMemoryFilmStorageTest {
     @Test
     void setNewId() {
         Film filmById = filmStorage.getFilmById(1);
-        filmStorage.setNewId(filmById);
+        filmStorage.save(filmById);
         assertNotEquals(0, filmById.getId(), "The film id is not as expected.");
     }
 
     @Test
-    void addFilm() {
+    void save() {
         int size = filmStorage.getFilms().size();
-        filmStorage.addFilm(new Film());
+        filmStorage.save(new Film());
         int size2 = filmStorage.getFilms().size();
         assertNotEquals(size, size2, "The film id is not as expected.");
     }

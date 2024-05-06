@@ -32,15 +32,14 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public Film createFilm(Film film) {
-        filmStorage.setNewId(film);
-        filmStorage.addFilm(film);
+        filmStorage.save(film);
         return film;
     }
 
     @Override
     public Film updateFilm(Film film) {
         filmStorage.filmExists(film.getId());
-        filmStorage.addFilm(film);
+        filmStorage.save(film);
         return film;
     }
 

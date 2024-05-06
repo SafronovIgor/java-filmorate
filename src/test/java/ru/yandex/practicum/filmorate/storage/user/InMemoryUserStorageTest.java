@@ -52,11 +52,7 @@ class InMemoryUserStorageTest {
 
     @Test
     void userExists() {
-        assertThrowsExactly(
-                ResourceNotFoundException.class,
-                () -> userStorage.userExists(999),
-                "Expected userExists() to throw an ResourceNotFoundException, but it didn't"
-        );
+        assertFalse(userStorage.userExists(999));
     }
 
     @Test

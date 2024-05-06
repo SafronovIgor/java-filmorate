@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.dto.FilmDTO;
+import ru.yandex.practicum.filmorate.dto.FilmDTOConverter;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
 
@@ -15,6 +17,7 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class FilmController {
     private final FilmService filmService;
+    private final FilmDTOConverter filmDTOConverter;
 
     @GetMapping(produces = "application/json")
     public Collection<Film> getFilms() {
@@ -29,9 +32,9 @@ public class FilmController {
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
-    public Film createFilm(@RequestBody @Valid Film film) {
-        log.info("Creating new film with name: {}", film.getName());
-        return filmService.createFilm(film);
+    public Film createFilm(@RequestBody @Valid FilmDTO filmDTO) {
+        log.info("Creating new film with name: {}", filmDTO.getName());
+        return filmService.createFilm(filmDTOConverter.FilmFromDTO(filmDTO));
     }
 
     @PutMapping(consumes = "application/json", produces = "application/json")
