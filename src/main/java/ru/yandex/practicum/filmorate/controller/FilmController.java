@@ -10,7 +10,6 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @RestController()
 public class FilmController {
@@ -28,7 +27,7 @@ public class FilmController {
             films.put(film.getId(), film);
             return new ResponseEntity<>(film, HttpStatus.CREATED);
         } catch (ValidationException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -43,32 +42,20 @@ public class FilmController {
             throw new ValidationException("Film object is null.");
         }
 
-        var sb = new StringBuilder();
-
-        if (Objects.equals(film.getName(), "null")) {
-            sb.append("The field name cannot contain the string value null.").append(System.lineSeparator());
-        } else if (film.getName() == null || film.getName().isEmpty()) {
-            sb.append("Field name cannot be empty or null.").append(System.lineSeparator());
+        if (film.getName() == null || film.getName().isEmpty()) {
+            throw new ValidationException("No valid name.");
         }
 
-        if (Objects.equals(film.getDescription(), "null")) {
-            sb.append("The field description cannot contain the string value null.").append(System.lineSeparator());
-        } else if (film.getDescription() == null) {
-            sb.append("Field description cannot be null.").append(System.lineSeparator());
-        } else if (film.getDescription().length() > 200) {
-            sb.append("Maximum description length is 200 characters.").append(System.lineSeparator());
+        if (film.getDescription().length() > 200) {
+            throw new ValidationException("No valid description.");
         }
 
-        if (film.getReleaseDate() == null || film.getReleaseDate().isBefore(LocalDate.parse("1895-12-28"))) {
-            sb.append("Release date must be no earlier than December 28, 1895.").append(System.lineSeparator());
+        if (film.getReleaseDate().isBefore(LocalDate.parse("1895-12-28"))) {
+            throw new ValidationException("No valid releaseDate.");
         }
 
-        if (film.getDuration() == null || film.getDuration().isNegative()) {
-            sb.append("Movie duration must be a positive number.").append(System.lineSeparator());
-        }
-
-        if (!sb.isEmpty()) {
-            throw new ValidationException(sb.toString(), film);
+        if (film.getDuration().isNegative()) {
+            throw new ValidationException("No valid duration.");
         }
     }
 }
