@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -59,7 +59,7 @@ public class FilmController {
             sb.append("Maximum description length is 200 characters.").append(System.lineSeparator());
         }
 
-        if (film.getReleaseDate() == null || film.getReleaseDate().isBefore(Instant.parse("1895-12-28T00:00:00Z"))) {
+        if (film.getReleaseDate() == null || film.getReleaseDate().isBefore(LocalDate.parse("1895-12-28"))) {
             sb.append("Release date must be no earlier than December 28, 1895.").append(System.lineSeparator());
         }
 

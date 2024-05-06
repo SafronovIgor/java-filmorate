@@ -4,8 +4,7 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.time.Duration;
-import java.time.Instant;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -57,7 +56,7 @@ class UserControllerTest {
 
         // Тестирование случая, когда Date of birth в будущем
         User userFutureBirthday = new User();
-        userFutureBirthday.setBirthday(Instant.now().plus(Duration.ofDays(1)));
+        userFutureBirthday.setBirthday(LocalDate.now().plusMonths(1));
         var exceptionFutureBirthday = assertThrows(ValidationException.class,
                 () -> UserController.validationUser(userFutureBirthday));
         assertTrue(exceptionFutureBirthday.getMessage().contains("Date of birth cannot be in the future."));
