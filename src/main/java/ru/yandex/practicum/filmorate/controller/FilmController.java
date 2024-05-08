@@ -1,80 +1,39 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import java.time.LocalDate;
+import ru.yandex.practicum.filmorate.service.FilmService;
+
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
-@RestController()
+@RestController
+@RequestMapping("/films")
 public class FilmController {
-    private final Map<Long, Film> films = new HashMap<>();
+    private final FilmService filmService;
 
-    @GetMapping("/films")
-    public ResponseEntity<Collection<Film>> getFilms() {
-        return new ResponseEntity<>(films.values(), HttpStatus.OK);
+    @Autowired
+    public FilmController(FilmService filmService) {
+        this.filmService = filmService;
     }
 
-    @PostMapping(value = "films", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> createFilm(@RequestBody Film film) {
-        film.setId(getNextId());
-
-        try {
-            validationFilm(film);
-            films.put(film.getId(), film);
-            return new ResponseEntity<>(film, HttpStatus.CREATED);
-        } catch (ValidationException e) {
-            return new ResponseEntity<>(film, HttpStatus.BAD_REQUEST);
-        }
+    @GetMapping
+    public Collection<Film> getFilms() {
+        return filmService.getFilms();
     }
 
-    @PutMapping(value = "films", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Film> updateFilm(@RequestBody Film film) {
-        if (!films.containsKey(film.getId())) {
-            return new ResponseEntity<>(film, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        films.put(film.getId(), film);
-        return new ResponseEntity<>(film, HttpStatus.OK);
+    @PostMapping(consumes = "application/json", produces = "application/json")
+    public Film createFilm(@RequestBody @Valid Film film) {
+        filmService.assignNewId(film);
+        filmService.addUserToMap(film);
+        return film;
     }
 
-    public static void validationFilm(Film film) throws ValidationException {
-        if (film == null) {
-            throw new ValidationException();
-        }
-
-        if (film.getName() != null) {
-            if (film.getName().isEmpty()) {
-                throw new ValidationException();
-            }
-        }
-
-        if (film.getDescription() != null) {
-            if (film.getDescription().length() > 200) {
-                throw new ValidationException();
-            }
-        }
-
-        if (film.getReleaseDate() != null) {
-            if (film.getReleaseDate().isBefore(LocalDate.parse("1895-12-28"))) {
-                throw new ValidationException();
-            }
-        }
-
-        if (film.getDuration() < 0) {
-            throw new ValidationException();
-        }
-    }
-
-    private long getNextId() {
-        var currentMaxId = films.values().stream()
-                .mapToLong(Film::getId)
-                .max()
-                .orElse(0L);
-        return ++currentMaxId;
+    @PutMapping(consumes = "application/json", produces = "application/json")
+    public Film updateFilm(@RequestBody @Valid Film film) {
+        filmService.checkUserExists(film.getId());
+        filmService.addUserToMap(film);
+        return film;
     }
 }
