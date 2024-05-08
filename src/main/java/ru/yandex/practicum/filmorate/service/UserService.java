@@ -29,4 +29,10 @@ public class UserService {
             throw new ResourceNotFoundException("User not found with id: " + userId);
         }
     }
+
+    public void updateNameFromLoginIfEmpty(User user) {
+        if (user.getName() == null || user.getName().isEmpty()) {
+            user.setName(user.getLogin());
+        }
+    }
 }

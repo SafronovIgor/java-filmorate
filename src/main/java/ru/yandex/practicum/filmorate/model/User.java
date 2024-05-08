@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @Data
 public class User {
     private long id;
+    private String name;
 
     @NotBlank(message = "Email cannot be blank")
     @Email(message = "Invalid email format")
@@ -20,20 +21,6 @@ public class User {
     @Pattern(regexp = "\\S+", message = "Login cannot contain spaces")
     private String login;
 
-    private String name;
-
     @Past(message = "Birthday must be in the past")
     private LocalDate birthday;
-
-    public User(long id, String email, String login, String name, LocalDate birthday) {
-        this.id = id;
-        this.email = email;
-        this.login = login;
-        if (name == null || name.isEmpty()) {
-            this.name = login;
-        } else {
-            this.name = name;
-        }
-        this.birthday = birthday;
-    }
 }

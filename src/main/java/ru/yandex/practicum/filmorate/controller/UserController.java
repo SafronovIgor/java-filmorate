@@ -26,6 +26,7 @@ public class UserController {
     @PostMapping(consumes = "application/json", produces = "application/json")
     public User createUser(@RequestBody @Valid User user) {
         userService.assignNewId(user);
+        userService.updateNameFromLoginIfEmpty(user);
         userService.addUserToMap(user);
         return user;
     }
