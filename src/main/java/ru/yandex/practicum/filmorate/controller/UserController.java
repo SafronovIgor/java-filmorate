@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @PutMapping(consumes = "application/json", produces = "application/json")
-    public User updateUser(@RequestBody User user) {
+    public User updateUser(@RequestBody @Valid User user) {
         userService.checkUserExists(user.getId());
         userService.addUserToMap(user);
         return user;
