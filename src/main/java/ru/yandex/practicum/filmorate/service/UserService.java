@@ -9,29 +9,34 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class UserService {
+public class UserService implements UserServiceImpl {
     private final Map<Long, User> users = new HashMap<>();
 
+    @Override
     public Collection<User> getUsers() {
         return users.values();
     }
 
+    @Override
     public void assignNewId(User obj) {
         obj.setId(ServiceUtil.generateNewId(users));
     }
 
+    @Override
     public void addUserToMap(User user) {
         users.put(user.getId(), user);
     }
 
-    public void checkUserExists(Long userId) {
+    @Override
+    public void checkUserExists(long userId) {
         if (!users.containsKey(userId)) {
             throw new ResourceNotFoundException("User not found with id: " + userId);
         }
     }
 
+    @Override
     public void updateNameFromLoginIfEmpty(User user) {
-        if (user.getName() == null || user.getName().isEmpty()) {
+        if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
     }
