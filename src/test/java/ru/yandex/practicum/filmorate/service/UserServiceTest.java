@@ -4,8 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exception.ResourceNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.user.UserService;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import java.util.Collection;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,7 +18,7 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        userService = new UserService();
+        userService = new UserService(new InMemoryUserStorage());
     }
 
     @Test
@@ -72,5 +75,94 @@ class UserServiceTest {
         userService.updateNameFromLoginIfEmpty(userWithExistingName);
 
         assertEquals("existingname", userWithExistingName.getName());
+    }
+
+    @Test
+    void testAddToFriends() {
+        var user1 = new User();
+        var user2 = new User();
+        userService.assignNewId(user1);
+        userService.assignNewId(user2);
+        userService.addToFriends(user1, user2);
+
+        assertTrue(user1.getFriends().contains(user2.getId()));
+        assertTrue(user2.getFriends().contains(user1.getId()));
+    }
+
+    @Test
+    void testRemoveFromFriends_Success() {
+        var user1 = new User();
+        var user2 = new User();
+        userService.assignNewId(user1);
+        userService.assignNewId(user2);
+        userService.addToFriends(user1, user2);
+
+        userService.removeFromFriends(user1, user2);
+
+        assertFalse(user1.getFriends().contains(user2.getId()));
+        assertFalse(user2.getFriends().contains(user1.getId()));
+    }
+
+    @Test
+    void testRemoveFromFriends_Empty_Sets() {
+        var user1 = new User();
+        var user2 = new User();
+        userService.assignNewId(user1);
+        userService.assignNewId(user2);
+
+        userService.removeFromFriends(user1, user2);
+
+        assertFalse(user1.getFriends().contains(user2.getId()));
+        assertFalse(user2.getFriends().contains(user1.getId()));
+    }
+
+    @Test
+    void testGetCommonFriends_NoCommonFriends() {
+        var user1 = new User();
+        user1.setId(1L);
+        userService.addUserToMap(user1);
+
+        var user2 = new User();
+        user2.setId(2L);
+        userService.addUserToMap(user2);
+
+        List<User> commonFriends = userService.getCommonFriends(user1, user2);
+
+        assertTrue(commonFriends.isEmpty());
+    }
+
+    @Test
+    void testGetCommonFriends_CommonsFriendsExist() {
+        var user1 = new User();
+        user1.setId(1L);
+        userService.addUserToMap(user1);
+
+        var user2 = new User();
+        user2.setId(2L);
+        userService.addUserToMap(user2);
+
+        var commonFriend = new User();
+        commonFriend.setId(3L);
+        userService.addUserToMap(commonFriend);
+
+        userService.addToFriends(user1, commonFriend);
+        userService.addToFriends(user2, commonFriend);
+
+        List<User> commonFriends = userService.getCommonFriends(user1, user2);
+
+        assertFalse(commonFriends.isEmpty());
+        assertTrue(commonFriends.contains(commonFriend));
+    }
+
+    @Test
+    void testGetCommonFriends_UserDoesNotExist() {
+        var user1 = new User();
+        user1.setId(1L);
+        userService.addUserToMap(user1);
+
+        var user2 = new User();
+        user2.setId(2L);
+
+        assertThrows(ResourceNotFoundException.class, () -> userService.getCommonFriends(user1, user2));
     }
 }
