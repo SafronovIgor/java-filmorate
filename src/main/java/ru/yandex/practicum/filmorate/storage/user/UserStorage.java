@@ -16,7 +16,5 @@ public interface UserStorage {
 
     boolean userExists(long id);
 
-    boolean friendExists(User obj, long id);
-
     void updateEmptyNameFromLogin(User obj);
 }

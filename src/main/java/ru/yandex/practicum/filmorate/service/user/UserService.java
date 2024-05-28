@@ -41,12 +41,6 @@ public class UserService implements UserServiceImpl {
         }
     }
 
-    public void checkFriendsExist(User user, long id) {
-        if (!userStorage.friendExists(user, id)) {
-            throw new ResourceNotFoundException("Friend not found with id: " + id);
-        }
-    }
-
     public void updateNameFromLoginIfEmpty(User user) {
         userStorage.updateEmptyNameFromLogin(user);
     }
