@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
+import ru.yandex.practicum.filmorate.service.user.UserService;
 
 import java.util.Collection;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FilmController {
     private final FilmService filmService;
+    private final UserService userService;
 
     @GetMapping(produces = "application/json")
     public Collection<Film> getFilms() {
@@ -22,6 +24,7 @@ public class FilmController {
 
     @GetMapping(path = "/{id}", produces = "application/json")
     public Film getFilm(@PathVariable Long id) {
+        filmService.checkFilmExists(id);
         return filmService.getFilm(id);
     }
 
@@ -41,6 +44,9 @@ public class FilmController {
 
     @PutMapping(path = "{id}/like/{userId}", produces = "application/json")
     public Film setLikeToFilm(@PathVariable Long id, @PathVariable Long userId) {
+        filmService.checkFilmExists(id);
+        userService.checkUserExists(userId);
+
         Film film = filmService.getFilm(id);
         filmService.addLike(userId, film);
         return film;
@@ -48,6 +54,9 @@ public class FilmController {
 
     @DeleteMapping(path = "{id}/like/{userId}")
     public Film deleteLikeFromFilm(@PathVariable Long id, @PathVariable Long userId) {
+        filmService.checkFilmExists(id);
+        userService.checkUserExists(userId);
+
         Film film = filmService.getFilm(id);
         filmService.removeLike(userId, film);
         return film;
