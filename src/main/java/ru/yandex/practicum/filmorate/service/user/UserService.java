@@ -45,6 +45,10 @@ public class UserService implements UserServiceImpl {
         userStorage.updateEmptyNameFromLogin(user);
     }
 
+    public List<User> getFriends(long id) {
+        return userStorage.getFriends(id);
+    }
+
     @Override
     public void addToFriends(User source, User target) {
         Set<Long> sourceFriends = source.getFriends();

@@ -5,7 +5,10 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.util.ServiceUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Getter
 @Component
@@ -38,14 +41,17 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public boolean friendExists(User user, long id) {
-        return user.getFriends().contains(id);
-    }
-
-    @Override
     public void updateEmptyNameFromLogin(User obj) {
         if (obj.getName() == null || obj.getName().isBlank()) {
             obj.setName(obj.getLogin());
         }
+    }
+
+    @Override
+    public List<User> getFriends(long id) {
+        return getUserById(id).getFriends()
+                .stream()
+                .map(this::getUserById)
+                .toList();
     }
 }

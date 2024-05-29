@@ -43,12 +43,7 @@ public class UserController {
     @GetMapping(path = "/{id}/friends")
     public List<User> getFriends(@PathVariable Long id) {
         userService.checkUserExists(id);
-        return userService
-                .getUser(id)
-                .getFriends()
-                .stream()
-                .map(userService::getUser)
-                .toList();
+        return userService.getFriends(id);
     }
 
     @PutMapping(path = "/{id}/friends/{friendId}")
