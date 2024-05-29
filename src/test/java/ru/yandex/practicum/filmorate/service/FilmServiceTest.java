@@ -76,6 +76,7 @@ class FilmServiceTest {
         assertEquals(beforeLikes + 1, afterLikes);
         assertTrue(film.getLikes().contains(1L));
     }
+
     @Test
     void testRemoveLike() {
         var film = new Film();
@@ -88,6 +89,7 @@ class FilmServiceTest {
         filmService.removeLike(1L, film);
         assertFalse(film.getLikes().contains(1L));
     }
+
     @Test
     void testGetTopPopularFilms() {
         for (int i = 0; i < 11; i++) {
@@ -99,7 +101,7 @@ class FilmServiceTest {
             filmService.addFilmToMap(film);
         }
 
-       List<Film> films = filmService.getTopPopularFilms(10);
-       assertEquals(10, films.size());
-   }
+        List<Film> films = filmService.getTopPopularFilms(10);
+        assertEquals(10, films.size());
+    }
 }
