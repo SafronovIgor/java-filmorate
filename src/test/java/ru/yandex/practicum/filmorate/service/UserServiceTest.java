@@ -24,6 +24,7 @@ class UserServiceTest {
     @Test
     void testGetUsers() {
         Collection<User> users = userService.getUsers();
+
         assertNotNull(users);
         assertTrue(users.isEmpty());
     }

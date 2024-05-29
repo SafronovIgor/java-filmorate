@@ -93,11 +93,14 @@ class FilmServiceTest {
     @Test
     void testGetTopPopularFilms() {
         for (int i = 0; i < 11; i++) {
+
             var film = new Film();
             filmService.assignNewId(film);
+
             for (int j = 0; j < i; j++) {
                 filmService.addLike(j, film);
             }
+
             filmService.addFilmToMap(film);
         }
 
