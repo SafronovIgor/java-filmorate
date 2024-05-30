@@ -15,7 +15,7 @@ public interface UserStorage {
 
     void addUser(User obj);
 
-    boolean userExists(long id);
+    void userExists(long id);
 
     void updateEmptyNameFromLogin(User obj);
 

@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.storage.user;
 
 import lombok.Getter;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.ResourceNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.util.ServiceUtil;
 
@@ -36,8 +37,10 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public boolean userExists(long id) {
-        return usersInMemory.containsKey(id);
+    public void userExists(long id) {
+        if (!usersInMemory.containsKey(id)) {
+            throw new ResourceNotFoundException("User not found with id: " + id);
+        }
     }
 
     @Override

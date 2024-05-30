@@ -14,5 +14,5 @@ public interface FilmStorage {
 
     void addFilm(Film obj);
 
-    boolean filmExists(long id);
+    void filmExists(long id);
 }

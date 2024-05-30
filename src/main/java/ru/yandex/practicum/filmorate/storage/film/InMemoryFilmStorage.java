@@ -2,10 +2,14 @@ package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.Getter;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.ResourceNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.util.ServiceUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Getter
 @Component
@@ -34,7 +38,9 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public boolean filmExists(long id) {
-        return filmsInMemory.containsKey(id);
+    public void filmExists(long id) {
+        if (!filmsInMemory.containsKey(id)) {
+            throw new ResourceNotFoundException("Film not found with id: " + id);
+        }
     }
 }
