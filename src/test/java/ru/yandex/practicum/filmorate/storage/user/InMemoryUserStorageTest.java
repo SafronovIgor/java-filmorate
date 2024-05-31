@@ -38,7 +38,7 @@ class InMemoryUserStorageTest {
 
     @Test
     void setNewId() {
-        User userById = userStorage.getUserById(0);
+        User userById = userStorage.getUserById(1);
         userStorage.setNewId(userById);
         assertNotEquals(0, userById.getId(), "The user id is not as expected.");
     }

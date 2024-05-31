@@ -37,7 +37,7 @@ class InMemoryFilmStorageTest {
 
     @Test
     void setNewId() {
-        Film filmById = filmStorage.getFilmById(0);
+        Film filmById = filmStorage.getFilmById(1);
         filmStorage.setNewId(filmById);
         assertNotEquals(0, filmById.getId(), "The film id is not as expected.");
     }
