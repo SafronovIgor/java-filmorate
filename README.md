@@ -3,4 +3,4 @@ Template repository for Filmorate project.
 
 # db diagram
 
-![Image alt](dbdiagramFilmorate.png)
+![Image alt](assets/images/dbdiagram.png)
