@@ -13,7 +13,7 @@ import ru.yandex.practicum.filmorate.model.HttpError;
 public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<HttpError> handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
-        log.error("ValidationException: {}", e.getMessage());
+        log.warn("ValidationException: {}", e.getMessage());
         String errorMessage = e.getBindingResult().getFieldError() != null
                 ? e.getBindingResult().getFieldError().getDefaultMessage()
                 : "Unknown error";
@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<HttpError> catchResourceNotFoundException(ResourceNotFoundException e) {
-        log.error(e.getMessage(), e);
+        log.warn(e.getMessage(), e);
         HttpError httpError = new HttpError(HttpStatus.NOT_FOUND.value(), e.getMessage());
         return new ResponseEntity<>(httpError, HttpStatus.NOT_FOUND);
     }
