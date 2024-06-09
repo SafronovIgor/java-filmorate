@@ -18,7 +18,7 @@ public class UserController {
 
     @GetMapping(produces = "application/json")
     public Collection<User> getUsers() {
-        log.info("Fetching all users");
+        log.info("Fetching all users.");
         return userService.getUsers();
     }
 
