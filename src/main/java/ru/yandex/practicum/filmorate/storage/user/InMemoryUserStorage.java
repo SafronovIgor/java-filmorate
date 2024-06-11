@@ -27,20 +27,23 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public void setNewId(User obj) {
-        obj.setId(ServiceUtil.generateNewId(usersInMemory));
-    }
-
-    @Override
     public void addUser(User obj) {
+        obj.setId(ServiceUtil.generateNewId(usersInMemory));
         usersInMemory.put(obj.getId(), obj);
     }
 
     @Override
-    public void userExists(long id) {
-        if (!usersInMemory.containsKey(id)) {
-            throw new ResourceNotFoundException("User not found with id: " + id);
+    public void updateUser(User obj) {
+        if (userExists(obj.getId())) {
+            usersInMemory.put(obj.getId(), obj);
+        } else {
+            throw new ResourceNotFoundException("User not found");
         }
+    }
+
+    @Override
+    public boolean userExists(long id) {
+        return usersInMemory.containsKey(id);
     }
 
     @Override

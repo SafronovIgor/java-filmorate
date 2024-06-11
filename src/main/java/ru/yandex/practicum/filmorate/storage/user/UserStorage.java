@@ -11,11 +11,11 @@ public interface UserStorage {
 
     Collection<User> getUsers();
 
-    void setNewId(User obj);
-
     void addUser(User obj);
 
-    void userExists(long id);
+    void updateUser(User obj);
+
+    boolean userExists(long id);
 
     void updateEmptyNameFromLogin(User obj);
 

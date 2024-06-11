@@ -18,7 +18,6 @@ class InMemoryUserStorageTest {
         userStorage = new InMemoryUserStorage();
         IntStream.range(0, 10).forEach(i -> {
             User user = new User();
-            userStorage.setNewId(user);
             userStorage.addUser(user);
         });
     }
@@ -39,7 +38,7 @@ class InMemoryUserStorageTest {
     @Test
     void setNewId() {
         User userById = userStorage.getUserById(1);
-        userStorage.setNewId(userById);
+        userStorage.addUser(userById);
         assertNotEquals(0, userById.getId(), "The user id is not as expected.");
     }
 
@@ -64,7 +63,6 @@ class InMemoryUserStorageTest {
     void updateEmptyNameFromLogin() {
         User user = new User();
         user.setLogin("qwerty");
-        userStorage.setNewId(user);
         userStorage.addUser(user);
         userStorage.updateEmptyNameFromLogin(user);
         assertEquals(user.getName(), user.getLogin());
@@ -73,7 +71,6 @@ class InMemoryUserStorageTest {
     @Test
     void getFriends() {
         User user = new User();
-        userStorage.setNewId(user);
         userStorage.addUser(user);
         List<User> friends = userStorage.getFriends(user.getId());
         user.getFriends().add(5L);
