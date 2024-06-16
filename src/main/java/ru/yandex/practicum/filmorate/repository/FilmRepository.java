@@ -39,18 +39,18 @@ public class FilmRepository {
 
     public Film save(Film film) {
         String query = """
-                INSERT INTO "film" (name, description, releaseDate, duration)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO "film" (name, description, release_date, duration, mpa_rating_id)
+                VALUES (?, ?, ?, ?, ?)
                 """;
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection
-                    .prepareStatement(query, new String[]{"id"});
+            PreparedStatement ps = connection.prepareStatement(query, new String[]{"id"});
             ps.setString(1, film.getName());
             ps.setString(2, film.getDescription());
             ps.setDate(3, java.sql.Date.valueOf(film.getReleaseDate()));
             ps.setLong(4, film.getDuration());
+            ps.setLong(5, film.getMpa().getId());
             return ps;
         }, keyHolder);
 
@@ -59,7 +59,7 @@ public class FilmRepository {
         if (newID != null) {
             film.setId(newID.longValue());
         } else {
-            throw new RuntimeException("The ID for the new user could not be generated.");
+            throw new RuntimeException("The ID for the new film could not be generated.");
         }
         return film;
     }
@@ -68,7 +68,7 @@ public class FilmRepository {
         if (existsById(film.getId())) {
             String query = """
                     UPDATE "film"
-                    SET name = ?, description = ?, releaseDate = ?, duration = ?
+                    SET name = ?, description = ?, release_date = ?, duration = ?, mpa_rating_id = ?
                     WHERE id = ?
                     """;
             jdbcTemplate.update(
@@ -77,12 +77,13 @@ public class FilmRepository {
                     film.getDescription(),
                     film.getReleaseDate(),
                     film.getDuration(),
+                    film.getMpa().getId(),
                     film.getId()
             );
         } else {
-            throw new ResourceNotFoundException("The user could not be found.");
+            throw new ResourceNotFoundException("The film could not be found.");
         }
-        return null;
+        return film;
     }
 
     public boolean existsById(long id) {
