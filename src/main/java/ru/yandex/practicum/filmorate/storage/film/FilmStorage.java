@@ -12,5 +12,7 @@ public interface FilmStorage {
 
     void save(Film obj);
 
+    Film update(Film film);
+
     void filmExists(long id);
 }

@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.repository.FilmRepository;
 
 import java.util.Collection;
-import java.util.List;
 
 @Primary
 @Component
@@ -28,6 +27,11 @@ public class FilmsDbStorage implements FilmStorage {
     @Override
     public void save(Film obj) {
         filmRepository.save(obj);
+    }
+
+    @Override
+    public Film update(Film film) {
+        return filmRepository.update(film);
     }
 
     @Override

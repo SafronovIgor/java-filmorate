@@ -34,6 +34,13 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
+    public Film update(Film film) {
+        filmExists(film.getId());
+        filmsInMemory.put(film.getId(), film);
+        return film;
+    }
+
+    @Override
     public void filmExists(long id) {
         if (!filmsInMemory.containsKey(id)) {
             throw new ResourceNotFoundException("Film not found with id: " + id);
