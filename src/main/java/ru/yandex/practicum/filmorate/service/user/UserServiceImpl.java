@@ -37,8 +37,7 @@ public class UserServiceImpl implements UserService {
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
-        userStorage.addUser(user);
-        return user;
+        return userStorage.addUser(user);
     }
 
     @Override

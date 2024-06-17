@@ -1,11 +1,12 @@
 package ru.yandex.practicum.filmorate.service.like;
 
-import ru.yandex.practicum.filmorate.model.Film;
+import java.util.Set;
 
 public interface LikeService {
 
-    Film addLikeToFilm(long idFilm, long userId);
+    void addLikeToFilm(long idFilm, long userId);
 
-    Film deleteLikeFromFilm(long idFilm, long userId);
+    void deleteLikeFromFilm(long idFilm, long userId);
 
+    Set<Long> getLikeFromFilm(long idFilm, long userId);
 }

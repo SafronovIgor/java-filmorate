@@ -40,38 +40,42 @@ public class FilmRepository {
     }
 
     public Film save(Film film) {
-        String query = """
+        if (existsById(film.getId())) {
+            update(film);
+        } else {
+            String query = """
                 INSERT INTO "film" (name, description, release_date, duration, mpa_rating_id)
                 VALUES (?, ?, ?, ?, ?)
                 """;
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(query, new String[]{"id"});
-            ps.setString(1, film.getName());
-            ps.setString(2, film.getDescription());
-            ps.setDate(3, java.sql.Date.valueOf(film.getReleaseDate()));
-            ps.setLong(4, film.getDuration());
-            ps.setLong(5, film.getMpa().getId());
-            return ps;
-        }, keyHolder);
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            jdbcTemplate.update(connection -> {
+                PreparedStatement ps = connection.prepareStatement(query, new String[]{"id"});
+                ps.setString(1, film.getName());
+                ps.setString(2, film.getDescription());
+                ps.setDate(3, java.sql.Date.valueOf(film.getReleaseDate()));
+                ps.setLong(4, film.getDuration());
+                ps.setLong(5, film.getMpa().getId());
+                return ps;
+            }, keyHolder);
 
-        Number newID = keyHolder.getKey();
+            Number newID = keyHolder.getKey();
 
-        if (newID != null) {
-            film.setId(newID.longValue());
+            if (newID != null) {
+                film.setId(newID.longValue());
 
-            for (Genres genre : film.getGenres()) {
-                addFilmGenre(film.getId(), genre.getId());
+                for (Genres genre : film.getGenres()) {
+                    addFilmGenre(film.getId(), genre.getId());
+                }
+
+                film.setMpa(mpaRepository.findById(film.getMpa().getId()));
+                film.setGenres(genresRepository.findAllById(film.getGenres().stream()
+                        .map(Genres::getId)
+                        .toList()
+                ));
+            } else {
+                throw new RuntimeException("The ID for the new film could not be generated.");
             }
-
-            film.setMpa(mpaRepository.findById(film.getMpa().getId()));
-            film.setGenres(genresRepository.findAllById(film.getGenres().stream()
-                    .map(Genres::getId)
-                    .toList()
-            ));
-        } else {
-            throw new RuntimeException("The ID for the new film could not be generated.");
         }
         return film;
     }

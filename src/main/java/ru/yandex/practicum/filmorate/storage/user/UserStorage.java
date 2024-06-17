@@ -11,7 +11,7 @@ public interface UserStorage {
 
     Collection<User> getUsers();
 
-    void addUser(User obj);
+    User addUser(User obj);
 
     void updateUser(User obj);
 

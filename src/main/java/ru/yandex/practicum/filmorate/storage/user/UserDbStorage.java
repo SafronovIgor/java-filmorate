@@ -26,8 +26,8 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public void addUser(User obj) {
-        userRepository.save(obj);
+    public User addUser(User obj) {
+        return userRepository.save(obj);
     }
 
     @Override

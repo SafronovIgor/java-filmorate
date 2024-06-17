@@ -2,29 +2,27 @@ package ru.yandex.practicum.filmorate.service.like;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.film.FilmService;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+import ru.yandex.practicum.filmorate.repository.LikeRepository;
+
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class LikeServiceImpl implements LikeService {
-    private final FilmService filmService;
-    private final UserStorage userStorage;
+    private final LikeRepository likeRepository;
 
     @Override
-    public Film addLikeToFilm(long idFilm, long userId) {
-        userStorage.userExists(userId);
-        Film film = filmService.getFilm(idFilm);
-        film.getLikes().add(userId);
-        return film;
+    public void addLikeToFilm(long idFilm, long userId) {
+        likeRepository.addLikeToFilm(idFilm, userId);
     }
 
     @Override
-    public Film deleteLikeFromFilm(long idFilm, long userId) {
-        userStorage.userExists(userId);
-        Film film = filmService.getFilm(idFilm);
-        film.getLikes().remove(userId);
-        return film;
+    public void deleteLikeFromFilm(long idFilm, long userId) {
+        likeRepository.removeLikeFromFilm(idFilm, userId);
+    }
+
+    @Override
+    public Set<Long> getLikeFromFilm(long idFilm, long userId) {
+        return likeRepository.getLikeFromFilm(idFilm);
     }
 }

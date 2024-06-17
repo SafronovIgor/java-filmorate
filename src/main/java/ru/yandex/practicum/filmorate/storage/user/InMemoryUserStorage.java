@@ -27,9 +27,10 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public void addUser(User obj) {
+    public User addUser(User obj) {
         obj.setId(ServiceUtil.generateNewId(usersInMemory));
         usersInMemory.put(obj.getId(), obj);
+        return obj;
     }
 
     @Override

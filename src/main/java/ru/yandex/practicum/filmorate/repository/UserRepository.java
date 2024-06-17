@@ -2,11 +2,11 @@ package ru.yandex.practicum.filmorate.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.ResourceNotFoundException;
+import ru.yandex.practicum.filmorate.mapper.UserRowMapper;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.PreparedStatement;
@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserRepository {
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<User> userRowMapper;
+    private final UserRowMapper userRowMapper;
 
     public User findById(long id) {
         String query = """
@@ -37,30 +37,35 @@ public class UserRepository {
         return jdbcTemplate.query(query, userRowMapper);
     }
 
-    public void save(User user) {
-        String query = """
-                INSERT INTO "user" (name, email, login, birthday)
-                VALUES (?, ?, ?, ?)
-                """;
-
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection
-                    .prepareStatement(query, new String[]{"id"});
-            ps.setString(1, user.getName());
-            ps.setString(2, user.getEmail());
-            ps.setString(3, user.getLogin());
-            ps.setDate(4, java.sql.Date.valueOf(user.getBirthday()));
-            return ps;
-        }, keyHolder);
-
-        Number newID = keyHolder.getKey();
-
-        if (newID != null) {
-            user.setId(newID.longValue());
+    public User save(User user) {
+        if (existsById(user.getId())) {
+            update(user);
         } else {
-            throw new RuntimeException("The ID for the new user could not be generated.");
+            String query = """
+                    INSERT INTO "user" (name, email, login, birthday)
+                    VALUES (?, ?, ?, ?)
+                    """;
+
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            jdbcTemplate.update(connection -> {
+                PreparedStatement ps = connection
+                        .prepareStatement(query, new String[]{"id"});
+                ps.setString(1, user.getName());
+                ps.setString(2, user.getEmail());
+                ps.setString(3, user.getLogin());
+                ps.setDate(4, java.sql.Date.valueOf(user.getBirthday()));
+                return ps;
+            }, keyHolder);
+
+            Number newID = keyHolder.getKey();
+
+            if (newID != null) {
+                user.setId(newID.longValue());
+            } else {
+                throw new RuntimeException("The ID for the new user could not be generated.");
+            }
         }
+        return user;
     }
 
     public void update(User user) {
