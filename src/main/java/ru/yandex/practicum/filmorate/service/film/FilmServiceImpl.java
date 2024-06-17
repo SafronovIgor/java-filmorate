@@ -32,8 +32,7 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public Film createFilm(Film film) {
-        filmStorage.save(film);
-        return film;
+        return filmStorage.save(film);
     }
 
     @Override

@@ -10,7 +10,7 @@ public interface FilmStorage {
 
     Collection<Film> getFilms();
 
-    void save(Film obj);
+    Film save(Film obj);
 
     Film update(Film film);
 

@@ -25,8 +25,8 @@ public class FilmsDbStorage implements FilmStorage {
     }
 
     @Override
-    public void save(Film obj) {
-        filmRepository.save(obj);
+    public Film save(Film obj) {
+        return filmRepository.save(obj);
     }
 
     @Override

@@ -1,0 +1,46 @@
+Table movie {
+  film_id bigint [pk]
+  name varchar(255) [not null]
+  description varchar(200)
+  release_date date [not null]
+  duration bigint [not null]
+  mpa_rating_id bigint [not null]
+}
+
+Table user {
+  user_id bigint [pk]
+  name varchar(255)
+  email varchar(255) [not null, unique]
+  login varchar(255) [not null, unique]
+  birthday date [not null]
+}
+
+Table like {
+  film_id bigint [pk]
+  user_id bigint [pk]
+}
+
+Table friend {
+  user_id bigint [pk]
+  friend_user_id bigint [pk]
+  friendship_status boolean [not null]
+}
+
+Table movie_genre {
+  film_id bigint [pk]
+  genre_id bigint [pk]
+}
+
+Table genre {
+  genre_id bigint [pk]
+  name varchar(255) [unique]
+}
+
+Ref: movie.film_id < like.film_id
+Ref: movie.film_id - movie_genre.film_id
+
+Ref: user.user_id < like.user_id
+Ref: user.user_id < friend.user_id
+Ref: user.user_id < friend.friend_user_id
+
+Ref: movie_genre.genre_id > genre.genre_id

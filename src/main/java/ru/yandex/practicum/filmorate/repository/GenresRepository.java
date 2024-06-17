@@ -6,8 +6,8 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.mapper.GenresMapper;
 import ru.yandex.practicum.filmorate.model.Genres;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -16,12 +16,12 @@ public class GenresRepository {
     private final GenresMapper genresMapper;
 
     public List<Genres> findAllById(List<Long> ids) {
-        String query = """
-                SELECT
-                    *
-                FROM "genre"
-                WHERE id IN (?)
-                """;
-        return jdbcTemplate.queryForObject(query, genresMapper, ids.toArray());
+        String inSql = ids.stream()
+                .map(id -> "?")
+                .collect(Collectors.joining(","));
+
+        String query = "SELECT * FROM \"genre\" WHERE id IN (" + inSql + ")";
+
+        return jdbcTemplate.query(query, ids.toArray(), genresMapper);
     }
 }
