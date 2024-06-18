@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.service.common;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.ResourceNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
@@ -15,24 +16,23 @@ public class CommonServiceImpl implements CommonService {
 
     @Override
     public List<User> getCommonFriends(long userId, long otherId) {
-        userStorage.userExists(userId);
-        userStorage.userExists(otherId);
+        if (userStorage.userExists(userId) && userStorage.userExists(otherId)) {
+            User objById = userStorage.getUserById(userId);
+            List<User> objCommonFriends = objById.getFriends().stream()
+                    .map(userStorage::getUserById)
+                    .collect(Collectors.toList());
 
-        User obj = userStorage.getUserById(userId);
-        User obj2 = userStorage.getUserById(otherId);
+            User obj2ById = userStorage.getUserById(otherId);
+            List<User> obj2CommonFriends = obj2ById.getFriends().stream()
+                    .map(userStorage::getUserById)
+                    .collect(Collectors.toList());
 
-        User objById = userStorage.getUserById(obj.getId());
-        List<User> objCommonFriends = objById.getFriends().stream()
-                .map(userStorage::getUserById)
-                .collect(Collectors.toList());
+            objCommonFriends.retainAll(obj2CommonFriends);
 
-        User obj2ById = userStorage.getUserById(obj2.getId());
-        List<User> obj2CommonFriends = obj2ById.getFriends().stream()
-                .map(userStorage::getUserById)
-                .collect(Collectors.toList());
+            return objCommonFriends;
+        } else {
+            throw new ResourceNotFoundException("ResourceNotFoundException");
+        }
 
-        objCommonFriends.retainAll(obj2CommonFriends);
-
-        return objCommonFriends;
     }
 }
