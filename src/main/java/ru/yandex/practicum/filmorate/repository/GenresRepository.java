@@ -50,7 +50,7 @@ public class GenresRepository {
 
     public List<Genres> findAllByFilm(Long id) {
         String sql = """
-                SELECT g.id, g.genre_name 
+                SELECT g.id, g.genre_name
                 FROM "genre" g
                 INNER JOIN "film_genre" fg ON fg.genre_id = g.id
                 WHERE fg.film_id = ?
