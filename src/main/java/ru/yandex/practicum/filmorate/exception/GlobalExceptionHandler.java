@@ -27,4 +27,11 @@ public class GlobalExceptionHandler {
         HttpError httpError = new HttpError(HttpStatus.NOT_FOUND.value(), e.getMessage());
         return new ResponseEntity<>(httpError, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<HttpError> catchResourceNotFoundException(ObjectNotFoundException e) {
+        log.warn(e.getMessage(), e);
+        HttpError httpError = new HttpError(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+        return new ResponseEntity<>(httpError, HttpStatus.BAD_REQUEST);
+    }
 }

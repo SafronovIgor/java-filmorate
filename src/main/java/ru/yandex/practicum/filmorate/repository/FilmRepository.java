@@ -23,7 +23,8 @@ public class FilmRepository {
     private final GenresRepository genresRepository;
 
     private static final String SELECT_ALL_FROM_FILM = "SELECT * FROM \"film\"";
-    private static final String INSERT_INTO_FILM_GENRE = "INSERT INTO \"film_genre\" (film_id, genre_id) VALUES (?, ?)";
+    private static final String MERGE_INTO_FILM_GENRE_FILM_ID_GENRE_ID_VALUES_INTO_FILM_GENRE =
+            "MERGE INTO \"film_genre\" (film_id, genre_id) VALUES (?, ?)";
 
     public Collection<Film> findAll() {
         return jdbcTemplate.query(SELECT_ALL_FROM_FILM, filmRowMapper);
@@ -64,15 +65,17 @@ public class FilmRepository {
             if (newID != null) {
                 film.setId(newID.longValue());
 
-                for (Genres genre : film.getGenres()) {
-                    addFilmGenre(film.getId(), genre.getId());
+                if (film.getGenres() != null) {
+                    for (Genres genre : film.getGenres()) {
+                        addFilmGenre(film.getId(), genre.getId());
+                    }
+                    film.setGenres(genresRepository.findAllById(film.getGenres().stream()
+                            .map(Genres::getId)
+                            .toList()
+                    ));
                 }
 
                 film.setMpa(mpaRepository.findById(film.getMpa().getId()));
-                film.setGenres(genresRepository.findAllById(film.getGenres().stream()
-                        .map(Genres::getId)
-                        .toList()
-                ));
             } else {
                 throw new RuntimeException("The ID for the new film could not be generated.");
             }
@@ -115,6 +118,6 @@ public class FilmRepository {
     }
 
     private void addFilmGenre(long filmId, long genreId) {
-        jdbcTemplate.update(INSERT_INTO_FILM_GENRE, filmId, genreId);
+        jdbcTemplate.update(MERGE_INTO_FILM_GENRE_FILM_ID_GENRE_ID_VALUES_INTO_FILM_GENRE, filmId, genreId);
     }
 }

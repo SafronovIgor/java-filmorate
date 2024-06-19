@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.service.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.ResourceNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
@@ -25,10 +24,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUser(long id) {
-        boolean userExists = userStorage.userExists(id);
-        if (!userExists) {
-            throw new ResourceNotFoundException("User not found");
-        }
         return userStorage.getUserById(id);
     }
 
@@ -42,7 +37,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(User user) {
-        userStorage.updateUser(user);
-        return user;
+        return userStorage.updateUser(user);
     }
 }

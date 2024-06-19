@@ -1,14 +1,16 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.ResourceNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.UserRepository;
 
 import java.util.Collection;
-import java.util.List;
 
+@Slf4j
 @Primary
 @Component
 @RequiredArgsConstructor
@@ -17,6 +19,7 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User getUserById(long id) {
+        userExists(id);
         return userRepository.findById(id);
     }
 
@@ -31,26 +34,20 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public void updateUser(User obj) {
+    public User updateUser(User obj) {
+        userExists(obj.getId());
         userRepository.update(obj);
+        return userRepository.findById(obj.getId());
     }
 
     @Override
     public boolean userExists(long id) {
-        return userRepository.existsById(id);
-    }
+        var existsById = userRepository.existsById(id);
 
-    @Override
-    public void updateEmptyNameFromLogin(User obj) {
-        User user = userRepository.findById(obj.getId());
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(obj.getLogin());
+        if (!existsById) {
+            log.warn("User with ID: {} not found.", id);
+            throw new ResourceNotFoundException("User with ID: " + id + " not found.");
         }
-        userRepository.update(user);
-    }
-
-    @Override
-    public List<User> getFriends(long id) {
-        return List.of();
+        return true;
     }
 }
