@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.service.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
@@ -13,7 +12,7 @@ public class UserServiceImpl implements UserService {
     private final UserStorage userStorage;
 
     @Autowired
-    public UserServiceImpl(@Qualifier("userDbStorage") UserStorage userStorage) {
+    public UserServiceImpl(UserStorage userStorage) {
         this.userStorage = userStorage;
     }
 
