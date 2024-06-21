@@ -46,7 +46,9 @@ CREATE TABLE IF NOT EXISTS "user"
     name     VARCHAR(255),
     email    VARCHAR(255) NOT NULL,
     login    VARCHAR(255) NOT NULL,
-    birthday DATE
+    birthday DATE,
+    CONSTRAINT user_email_uindex UNIQUE (email),
+    CONSTRAINT user_login_uindex UNIQUE (login)
 );
 
 CREATE TABLE IF NOT EXISTS "friend_status"

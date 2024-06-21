@@ -16,7 +16,7 @@ public class GenresRepository {
     private final JdbcTemplate jdbcTemplate;
     private final GenresMapper genresMapper;
 
-    public List<Genres> findAll() {
+    public List<Genres> getGenres() {
         String sql = """
                 SELECT
                     *
@@ -26,7 +26,7 @@ public class GenresRepository {
 
     }
 
-    public Genres findById(Long id) {
+    public Genres getGenreById(Long id) {
         if (existsById(id)) {
             String sql = """
                     SELECT

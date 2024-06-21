@@ -15,7 +15,7 @@ public class MpaRepository {
     private final JdbcTemplate jdbcTemplate;
     private final MpaMapper mpaMapper;
 
-    public List<Mpa> findAll() {
+    public List<Mpa> getMpaList() {
         String sql = """
                 SELECT
                     *
@@ -24,7 +24,7 @@ public class MpaRepository {
         return jdbcTemplate.query(sql, mpaMapper);
     }
 
-    public Mpa findById(Long id) {
+    public Mpa getMpaById(Long id) {
         if (existsById(id)) {
             String query = """
                 SELECT

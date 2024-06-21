@@ -20,11 +20,13 @@ public class GenresController {
 
     @GetMapping(produces = "application/json")
     public List<Genres> getGenres() {
-        return genresRepository.findAll();
+        log.info("Fetching all genres");
+        return genresRepository.getGenres();
     }
 
     @GetMapping(path = "/{id}", produces = "application/json")
     public Genres getGenre(@PathVariable long id) {
-        return genresRepository.findById(id);
+        log.info("Fetching genre with id: {}", id);
+        return genresRepository.getGenreById(id);
     }
 }

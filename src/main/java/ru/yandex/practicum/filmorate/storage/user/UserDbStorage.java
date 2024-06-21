@@ -18,22 +18,26 @@ public class UserDbStorage implements UserStorage {
     @Override
     public User getUserById(long id) {
         userExists(id);
+        log.info("Fetching user by ID: {}", id);
         return userRepository.findById(id);
     }
 
     @Override
     public Collection<User> getUsers() {
+        log.info("Fetching all users");
         return userRepository.findAll();
     }
 
     @Override
     public User addUser(User obj) {
+        log.info("Adding user: {}", obj.getName());
         return userRepository.save(obj);
     }
 
     @Override
     public User updateUser(User obj) {
         userExists(obj.getId());
+        log.info("Updating user with ID: {}", obj.getId());
         userRepository.update(obj);
         return userRepository.findById(obj.getId());
     }
@@ -46,6 +50,7 @@ public class UserDbStorage implements UserStorage {
             log.warn("User with ID: {} not found.", id);
             throw new ResourceNotFoundException("User with ID: " + id + " not found.");
         }
+        log.info("User with ID: {} exists.", id);
         return true;
     }
 }

@@ -75,7 +75,7 @@ public class FilmRepository {
                     ));
                 }
 
-                film.setMpa(mpaRepository.findById(film.getMpa().getId()));
+                film.setMpa(mpaRepository.getMpaById(film.getMpa().getId()));
             } else {
                 throw new RuntimeException("The ID for the new film could not be generated.");
             }

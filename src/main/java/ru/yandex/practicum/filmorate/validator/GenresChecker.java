@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface GenresChecker {
-    String message() default "Release date should not be earlier than 28 December 1895";
+    String message() default "Provided genres list contains non-existent IDs";
 
     Class<?>[] groups() default {};
 

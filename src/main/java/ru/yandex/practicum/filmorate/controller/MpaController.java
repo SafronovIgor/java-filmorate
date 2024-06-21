@@ -20,11 +20,13 @@ public class MpaController {
 
     @GetMapping(produces = "application/json")
     public List<Mpa> getMpaList() {
-        return mpaRepository.findAll();
+        log.info("Fetching all Mpa");
+        return mpaRepository.getMpaList();
     }
 
     @GetMapping(path = "/{id}", produces = "application/json")
     public Mpa getMpa(@PathVariable long id) {
-        return mpaRepository.findById(id);
+        log.info("Fetching Mpa with id: {}", id);
+        return mpaRepository.getMpaById(id);
     }
 }
