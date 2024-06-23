@@ -15,7 +15,7 @@ public class FilmServiceImpl implements FilmService {
     private final FilmStorage filmStorage;
 
     @Autowired
-    public FilmServiceImpl(@Qualifier("inMemoryFilmStorage") FilmStorage filmStorage) {
+    public FilmServiceImpl(@Qualifier("filmsDbStorage") FilmStorage filmStorage) {
         this.filmStorage = filmStorage;
     }
 
@@ -32,16 +32,12 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public Film createFilm(Film film) {
-        filmStorage.setNewId(film);
-        filmStorage.addFilm(film);
-        return film;
+        return filmStorage.save(film);
     }
 
     @Override
     public Film updateFilm(Film film) {
-        filmStorage.filmExists(film.getId());
-        filmStorage.addFilm(film);
-        return film;
+        return filmStorage.update(film);
     }
 
     @Override

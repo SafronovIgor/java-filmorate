@@ -2,49 +2,45 @@ package ru.yandex.practicum.filmorate.service.friend;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.ResourceNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.user.UserService;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+import ru.yandex.practicum.filmorate.repository.FriendRepository;
+import ru.yandex.practicum.filmorate.repository.UserRepository;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class FriendServiceImpl implements FriendService {
-    private final UserService userService;
-    private final UserStorage userStorage;
+    private final FriendRepository friendRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<User> getFriends(long id) {
-        userStorage.userExists(id);
-        return userStorage.getFriends(id);
+        if (userRepository.existsById(id)) {
+            return friendRepository.findAllFriends(id).stream()
+                    .map(userRepository::findById)
+                    .toList();
+        } else {
+            throw new ResourceNotFoundException("User not found");
+        }
     }
 
     @Override
     public void addFriend(long userId, long friendId) {
-        User user = userService.getUser(userId);
-        User friend = userService.getUser(friendId);
-
-        Set<Long> sourceFriends = user.getFriends();
-        sourceFriends.add(friend.getId());
-
-        Set<Long> targetFriends = friend.getFriends();
-        targetFriends.add(user.getId());
+        if (userRepository.existsById(userId) && userRepository.existsById(friendId)) {
+            friendRepository.addFriend(userId, friendId);
+        } else {
+            throw new ResourceNotFoundException("User not found");
+        }
     }
 
     @Override
     public void deleteFriend(long userId, long friendId) {
-        User user = userService.getUser(userId);
-        User friend = userService.getUser(friendId);
-
-        Set<Long> sourceFriends = user.getFriends();
-        Set<Long> targetFriends = friend.getFriends();
-        if (sourceFriends != null && !sourceFriends.isEmpty()) {
-            sourceFriends.remove(friend.getId());
-        }
-        if (targetFriends != null && !targetFriends.isEmpty()) {
-            targetFriends.remove(user.getId());
+        if (userRepository.existsById(userId) && userRepository.existsById(friendId)) {
+            friendRepository.deleteFriend(userId, friendId);
+        } else {
+            throw new ResourceNotFoundException("User not found");
         }
     }
 }

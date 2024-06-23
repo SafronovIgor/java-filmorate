@@ -19,7 +19,7 @@ public class CommonController {
     private final CommonService commonService;
 
     @GetMapping(path = "/{otherId}")
-    public List<User> getFriends(@PathVariable Long userId, @PathVariable Long otherId) {
+    public List<User> getCommonFriends(@PathVariable Long userId, @PathVariable Long otherId) {
         log.info("Fetching common friends for users with ids: {} and {}", userId, otherId);
         return commonService.getCommonFriends(userId, otherId);
     }
